@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const ErrorResponse = require('../utils/errorResponse');
-const User = require('../models/User');
+const jwt = require("jsonwebtoken");
+const ErrorResponse = require("../utils/errorResponse");
+const User = require("../models/User");
 
 // Protect Routes
 exports.protect = async (req, res, next) => {
@@ -8,18 +8,22 @@ exports.protect = async (req, res, next) => {
     let token;
     if (
       req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
+      req.headers.authorization.startsWith("Bearer")
     ) {
-      token = req.headers.authorization.split(' ')[1];
+      // token from header
+      token = req.headers.authorization.split(" ")[1];
     }
-    //  else if (req.cookies.token) {
+
+    //token from cookie
+
+    // else if (req.cookies.token) {
     //   token = req.cookies.token;
     // }
 
     // make sure token exists
 
     if (!token) {
-      return next(new ErrorResponse('No authorize to access this route', 401));
+      return next(new ErrorResponse("No authorize to access this route", 401));
     }
     try {
       //Verify Token
@@ -28,7 +32,7 @@ exports.protect = async (req, res, next) => {
       req.user = await User.findById(decoded.id);
       next();
     } catch (error) {
-      return next(new ErrorResponse('No authorize to access this route', 401));
+      return next(new ErrorResponse("No authorize to access this route", 401));
     }
   } catch (error) {}
 };
